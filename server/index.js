@@ -1,12 +1,12 @@
 const next = require('next');
 const { start } = require('./config/server');
-// const connectToDB = require('./config/database');
+const { connect } = require('./db');
 
 const app = next({ dir: './app' });
 
 app
   .prepare()
-//   .then(connectToDB)
+  .then(connect())
   .then(() => start(app))
   .catch(err => {
     console.log(err);
