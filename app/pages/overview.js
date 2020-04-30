@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Grid, Header, Input, Divider, Segment } from 'semantic-ui-react';
+import fetchData from '../utils/index'
 import { setAge, setWeight} from '../../redux/actions/calculatorActions';
 
 function calculate_age(dob) { 
@@ -10,12 +11,19 @@ function calculate_age(dob) {
   return Math.abs(age_diff.getUTCFullYear() - 1970);
 }
 
+function saveData(payload) {
+  return fetchData({
+    url: `/overview`,
+    body: { ...payload },
+  });
+};
+
 class Calculator extends React.Component {
   static getInitialProps({store}) {}
 
   constructor(props) {
     super(props);
-    const { sessionId, patientSex, patientHeightFormatted, patientWeightFormatted, patientBirthDate } = props;
+    const { sessionId, patientSex, patientHeightFormatted, patientWeightFormatted, patientBirthDate, uid } = props;
 
     const dateYearMonthDayArray = patientBirthDate.split('-', 3);
     const formattedBirthDate = new Date(dateYearMonthDayArray);
@@ -26,6 +34,7 @@ class Calculator extends React.Component {
       currentSex: patientSex,
       currentCreatine: '',
       sessionId,
+      uid,
       inputsFilled: false
     }
   }
@@ -33,6 +42,7 @@ class Calculator extends React.Component {
   componentDidUpdate() {
     if (this.state.currentSex !== "" && this.state.currentWeight !== "" && this.state.currentHeight !== "" && this.state.currentAge !== "" && this.state.currentCreatine !== "") {
       console.log('inputs filled');
+      saveData({currentAge : this.state.currentAge, currentWeight:this.state.currentWeight, currentSex:this.state.currentSex, currentCreatine:this.state.currentCreatine, currentHeight:this.state.currentHeight, uid:this.state.uid})
     }
     else {
       console.log('inputs not filled');
@@ -176,12 +186,14 @@ Calculator.getInitialProps = async ({ req, query }) => {
     patientSex,
     patientHeightFormatted,
     patientWeightFormatted,
+    uid,
     sessionId } = query;
   return formatInitialProps({
     patientBirthDate,
     patientSex,
     patientHeightFormatted,
     patientWeightFormatted,
+    uid,
     sessionId
   });
 }

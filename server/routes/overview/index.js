@@ -1,10 +1,11 @@
 const { Router } = require('express');
-const overviewController = require('../../controllers/overview');
+const { view, create } = require('../../controllers/overview');
 
 const router = Router();
 
 module.exports = (nextApp) => {
-  router.get('/', overviewController(nextApp));
+  router.get('/', view(nextApp));
+  router.post('/', create);
 
   return router;
 };
