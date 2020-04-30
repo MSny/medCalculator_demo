@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { setAge, setWeight} from '../../redux/actions/calculatorActions';
 import { Button, Container, Grid, Header, Input, Divider, Segment } from 'semantic-ui-react';
+import { setAge, setWeight} from '../../redux/actions/calculatorActions';
 
 function calculate_age(dob) { 
   const diff = Date.now() - dob.getTime();
@@ -25,118 +25,134 @@ class Calculator extends React.Component {
       currentHeight: patientHeightFormatted,
       currentSex: patientSex,
       currentCreatine: '',
-      sessionId
+      sessionId,
+      inputsFilled: false
     }
+  }
+
+  componentDidUpdate() {
+    if (this.state.currentSex !== "" && this.state.currentWeight !== "" && this.state.currentHeight !== "" && this.state.currentAge !== "" && this.state.currentCreatine !== "") {
+      console.log('inputs filled');
+    }
+    else {
+      console.log('inputs not filled');
+      
+    }  
   }
 
   handleValueChange = (element, field) => {
     this.setState({
       [field]: element.value,
     });
+    // eslint-disable-next-line react/destructuring-assignment
+    
   }
 
   render() {
-    const { currentAge, currentSex, currentHeight, currentCreatine, currentWeight, sessionId } = this.state; 
+    const { currentAge, currentSex, currentHeight, currentCreatine, currentWeight, sessionId, inputsFilled } = this.state; 
 
     return (
       <Container size="large" textAlign="center">
         <Header as="h2">MD Calc Demo</Header>
         <br />
         <Segment>
-        <Grid columns={2}>
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h4">Sex</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Button.Group>
-              <Button
-                value='female'
-                active={currentSex === 'female'}
-                onClick={(event, element) =>
+          <Grid columns={2}>
+            <Grid.Row>
+              <Grid.Column>
+                <Header as="h4">Sex</Header>
+              </Grid.Column>
+              <Grid.Column>
+                <Button.Group>
+                  <Button
+                    value='female'
+                    active={currentSex === 'female'}
+                    onClick={(event, element) =>
                   this.handleValueChange(element, 'currentSex')
                 }
-                >Female</Button>
-              <Button 
-                value='male' 
-                active={currentSex === 'male'} 
-                onClick={(event, element) =>
+                  >Female
+                  </Button>
+                  <Button 
+                    value='male' 
+                    active={currentSex === 'male'} 
+                    onClick={(event, element) =>
                     this.handleValueChange(element, 'currentSex')
                 }
-                >Male</Button>
-            </Button.Group>
-          </Grid.Column>
-        </Grid.Row>
-        <Divider section />
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h4">Age</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Input
-              label={{ basic: true, content: 'years' }}
-              labelPosition="right"
-              placeholder="Enter age..."
-              value={currentAge}
-              onChange={(event, element) =>
+                  >Male
+                  </Button>
+                </Button.Group>
+              </Grid.Column>
+            </Grid.Row>
+            <Divider section />
+            <Grid.Row>
+              <Grid.Column>
+                <Header as="h4">Age</Header>
+              </Grid.Column>
+              <Grid.Column>
+                <Input
+                  label={{ basic: true, content: 'years' }}
+                  labelPosition="right"
+                  placeholder="Enter age..."
+                  value={currentAge}
+                  onChange={(event, element) =>
                 this.handleValueChange(element, 'currentAge')
               }
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Divider section />
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h4">Weight</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Input
-              label={{ basic: true, content: 'kg' }}
-              labelPosition="right"
-              placeholder="Enter weight..."
-              value={currentWeight}
-              onChange={(event, element) =>
+                />
+              </Grid.Column>
+            </Grid.Row>
+            <Divider section />
+            <Grid.Row>
+              <Grid.Column>
+                <Header as="h4">Weight</Header>
+              </Grid.Column>
+              <Grid.Column>
+                <Input
+                  label={{ basic: true, content: 'kg' }}
+                  labelPosition="right"
+                  placeholder="Enter weight..."
+                  value={currentWeight}
+                  onChange={(event, element) =>
                 this.handleValueChange(element, 'currentWeight')
               }
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Divider section />
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h4">Creatinine</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Input
-              label={{ basic: true, content: 'mg/dl' }}
-              labelPosition="right"
-              placeholder="Enter creatinine..."
-              value={currentCreatine}
-              onChange={(event, element) =>
+                />
+              </Grid.Column>
+            </Grid.Row>
+            <Divider section />
+            <Grid.Row>
+              <Grid.Column>
+                <Header as="h4">Creatinine</Header>
+              </Grid.Column>
+              <Grid.Column>
+                <Input
+                  label={{ basic: true, content: 'mg/dl' }}
+                  labelPosition="right"
+                  placeholder="Enter creatinine..."
+                  value={currentCreatine}
+                  onChange={(event, element) =>
                 this.handleValueChange(element, 'currentCreatine')
               }
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Divider section />
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h4">Height</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Input
-              label={{ basic: true, content: 'cm' }}
-              labelPosition="right"
-              placeholder="Enter height..."
-              value={currentHeight}
-              onChange={(event, element) =>
+                />
+              </Grid.Column>
+            </Grid.Row>
+            <Divider section />
+            <Grid.Row>
+              <Grid.Column>
+                <Header as="h4">Height</Header>
+              </Grid.Column>
+              <Grid.Column>
+                <Input
+                  label={{ basic: true, content: 'cm' }}
+                  labelPosition="right"
+                  placeholder="Enter height..."
+                  value={currentHeight}
+                  onChange={(event, element) =>
                 this.handleValueChange(element, 'currentHeight')
               }
-            />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      </Segment>
+                />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <Button disabled={!inputsFilled}>Inputs filled</Button>
+        </Segment>
       </Container>
     );
   }
@@ -150,8 +166,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  setAge: setAge,
-  setWeight: setWeight,
+  setAge,
+  setWeight,
 };
 
 Calculator.getInitialProps = async ({ req, query }) => {
